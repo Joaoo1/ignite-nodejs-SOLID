@@ -1,3 +1,5 @@
+import BadRequestError from "../../../../common/errors/BadRequestError";
+import NotFoundError from "../../../../common/errors/NotFoundError";
 import { User } from "../../model/User";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
 
@@ -9,7 +11,17 @@ class ListAllUsersUseCase {
   constructor(private usersRepository: IUsersRepository) {}
 
   execute({ user_id }: IRequest): User[] {
-    // Complete aqui
+    const user = this.usersRepository.findById(user_id);
+
+    if (!user) {
+      throw new BadRequestError("User not found");
+    }
+
+    if (!user.admin) {
+      throw new BadRequestError("User is not an admin");
+    }
+
+    return this.usersRepository.list();
   }
 }
 
