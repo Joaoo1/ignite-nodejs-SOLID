@@ -1,0 +1,304 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Atlas",
+    "description": "Essa é uma documentação sobre a Atlas API",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "users",
+      "description": "Gerenciamento de usuários"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Cria um novo usuário",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "name": "Joaquim Machado",
+                  "email": "joaquim@mail.com"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "admin": {
+                      "type": "boolean"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "updated_at": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "id": "29fc2c61-feb0-459f-838a-9e64e6fda40a",
+                    "name": "Joaquim Machado",
+                    "email": "joaquim@mail.com",
+                    "admin": false,
+                    "created_at": "2022-01-04T03:08:02.622Z",
+                    "updated_at": "2022-01-04T03:08:02.622Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email já está sendo utilizado",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "User already exists"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["users"],
+        "summary": "Lista todos os usuários",
+        "description": "Somente usuário admin pode acessar",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "user_id",
+            "description": "id do usuário solicitante",
+            "required": true,
+            "schema": {
+              "type": "string (uuid)"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "admin": {
+                        "type": "boolean"
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "updated_at": {
+                        "type": "string"
+                      }
+                    },
+                    "example": {
+                      "id": "29fc2c61-feb0-459f-838a-9e64e6fda40a",
+                      "name": "Jonh doe",
+                      "email": "jonh@mail.com",
+                      "admin": false,
+                      "created_at": "2022-01-04T03:08:02.622Z",
+                      "updated_at": "2022-01-04T03:08:02.622Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Usuário sem permissão",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "User is not an admin"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "User not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "get": {
+        "tags": ["users"],
+        "summary": "retorna um usuário específico",
+        "description": "Somente usuário admin pode acessar",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "description": "id do usuário",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "admin": {
+                      "type": "boolean"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "updated_at": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "id": "29fc2c61-feb0-459f-838a-9e64e6fda40a",
+                    "name": "Jonh doe",
+                    "email": "jonh@mail.com",
+                    "admin": false,
+                    "created_at": "2022-01-04T03:08:02.622Z",
+                    "updated_at": "2022-01-04T03:08:02.622Z"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "User not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "users/{user_id}/admin": {
+      "patch": {
+        "tags": ["users"],
+        "summary": "Torna um usuário administrador",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "description": "id do usuário",
+            "required": true,
+            "schema": {
+              "type":"string (uuid)"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "admin": {
+                      "type": "boolean"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "updated_at": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "id": "29fc2c61-feb0-459f-838a-9e64e6fda40a",
+                    "name": "Jonh doe",
+                    "email": "jonh@mail.com",
+                    "admin": false,
+                    "created_at": "2022-01-04T03:08:02.622Z",
+                    "updated_at": "2022-01-04T03:08:02.622Z"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "User not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
